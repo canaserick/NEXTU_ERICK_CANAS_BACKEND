@@ -92,16 +92,25 @@ $(function(){
   // renderizar la data en el evento click del boton buscar
   $('#buscar').on('click', function(){
     if($('#checkPersonalizada').prop("checked") == false){
+       $(".lista").empty()
         //busqueda general
         render(dataArray)
     } else {
+      // obtener el rango de fechas
+      var slider = $("#rangoPrecio").data("ionRangeSlider");
+      var from = slider.result.from;
+      var to = slider.result.to;
       //busqueda personalizada
       var dataFilter = jQuery.grep(dataArray, function(value, index){
-          return (value.Ciudad == $("#ciudad").val())
+          return (value.Ciudad == $("#ciudad").val() &&
+                  value.Tipo == $("#tipo").val() &&
+                  parseFloat(value.Precio.replace(/[$,]+/g,"")) >= from &&
+                  parseFloat(value.Precio.replace(/[$,]+/g,"")) <= to
+                  )
       })
+      $(".lista").empty()
       render(dataFilter)
     }
-
   })
 
 
